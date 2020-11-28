@@ -23,3 +23,5 @@ RUN apt -y install xvfb
 RUN git clone https://github.com/jibon57/bbb-recorder
 RUN cd bbb-recorder && npm install --ignore-scripts
 WORKDIR /root/bbb-recorder
+
+ENTRYPOINT ["npm", "run", "export"]
