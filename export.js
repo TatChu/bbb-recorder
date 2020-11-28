@@ -238,7 +238,7 @@ function copyOnly(filename) {
   var copyTo = copyToPath + "/" + filename;
 
   if (!fs.existsSync(copyToPath)) {
-    fs.mkdirSync(copyToPath);
+    fs.mkdirSync(copyToPath, { recursive: true });
   }
 
   try {
