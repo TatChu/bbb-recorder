@@ -62,16 +62,17 @@ async function main() {
       console.warn("URL undefined!");
       process.exit(1);
     }
+    // We no need to check url for now.
     // Verify if recording URL has the correct format
-    var urlRegex = new RegExp(
-      "^https?:\\/\\/.*\\/playback\\/presentation\\/2\\.0\\/" +
-        playbackFile +
-        "\\?meetingId=[a-z0-9]{40}-[0-9]{13}"
-    );
-    if (!urlRegex.test(url)) {
-      console.warn("Invalid recording URL!");
-      process.exit(1);
-    }
+    // var urlRegex = new RegExp(
+    //   "^https?:\\/\\/.*\\/playback\\/presentation\\/2\\.0\\/" +
+    //     playbackFile +
+    //     "\\?meetingId=[a-z0-9]{40}-[0-9]{13}"
+    // );
+    // if (!urlRegex.test(url)) {
+    //   console.warn("Invalid recording URL!");
+    //   process.exit(1);
+    // }
 
     var exportname = process.argv[3];
     // Use meeting ID as export name if it isn't defined or if its value is "MEETING_ID"
