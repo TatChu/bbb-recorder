@@ -4,7 +4,7 @@ const fs = require("fs");
 const os = require("os");
 const homedir = os.homedir();
 const platform = os.platform();
-const { copyToPath, playbackFile } = require("./env");
+const { copyToPath } = require("./env");
 const spawn = require("child_process").spawn;
 
 var xvfb = new Xvfb({
@@ -64,24 +64,20 @@ async function main() {
     }
     // We no need to check url for now.
     // Verify if recording URL has the correct format
-    // var urlRegex = new RegExp(
-    //   "^https?:\\/\\/.*\\/playback\\/presentation\\/2\\.0\\/" +
-    //     playbackFile +
-    //     "\\?meetingId=[a-z0-9]{40}-[0-9]{13}"
-    // );
-    // if (!urlRegex.test(url)) {
-    //   console.warn("Invalid recording URL!");
-    //   process.exit(1);
-    // }
+    var urlRegex = /\/playback\/presentation\/2\.3\/[a-z0-9]{40}-[0-9]{13}/g;
+    if (!urlRegex.test(url)) {
+      console.warn("Invalid recording URL!");
+      process.exit(1);
+    }
 
     var exportname = process.argv[3];
     // Use meeting ID as export name if it isn't defined or if its value is "MEETING_ID"
     if (!exportname || exportname == "MEETING_ID") {
-      exportname = url.split("=")[1] + ".webm";
+      exportname = url.split("/").pop() + ".webm";
+      console.log("exporting to ", exportname);
     }
 
     var duration = process.argv[4];
-    console.log(duration);
 
     // If duration isn't defined, set it in 0
     if (!duration) {
