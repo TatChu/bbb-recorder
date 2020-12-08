@@ -81,6 +81,8 @@ async function main() {
     }
 
     var duration = process.argv[4];
+    console.log(duration);
+
     // If duration isn't defined, set it in 0
     if (!duration) {
       duration = 0;
@@ -117,13 +119,16 @@ async function main() {
     await page.setBypassCSP(true);
 
     // Check if recording exists (search "Recording not found" message)
-    var loadMsg = await page.evaluate(() => {
-      return document.getElementById("load-msg").textContent;
-    });
-    if (loadMsg == "Recording not found") {
-      console.warn("Recording not found!");
-      process.exit(1);
-    }
+    // Disable hide loading for v2.3
+    // var loadMsg = await page.evaluate(() => {
+    //   return document.getElementById("load-msg").textContent;
+    // });
+
+    // TODO: Check record not found
+    // if (loadMsg == "Recording not found") {
+    //   console.warn("Recording not found!");
+    //   process.exit(1);
+    // }
 
     // Get recording duration
     var recDuration = await page.evaluate(() => {
@@ -134,17 +139,30 @@ async function main() {
       duration = recDuration;
     }
 
-    await page.waitForSelector("button[class=acorn-play-button]");
-    await page.$eval("#navbar", (element) => (element.style.display = "none"));
+    await page.waitForSelector("button[title='Play']");
     await page.$eval(
-      "#copyright",
+      'button[aria-label="Fullscreen content"]',
       (element) => (element.style.display = "none")
     );
     await page.$eval(
-      ".acorn-controls",
+      'button[aria-label="Search"]',
+      (element) => (element.style.display = "none")
+    );
+    await page.$eval(
+      'button[aria-label="Swap content"]',
+      (element) => (element.style.display = "none")
+    );
+    await page.$eval(
+      ".bottom-content",
+      (element) => (element.style.display = "none")
+    );
+    await page.$eval(".top-bar", (element) => (element.style.display = "none"));
+    await page.$eval(
+      ".vjs-control-bar",
       (element) => (element.style.opacity = "0")
     );
-    await page.click("button[class=acorn-play-button]", {
+
+    await page.click("button[title='Play']", {
       waitUntil: "domcontentloaded",
     });
 
