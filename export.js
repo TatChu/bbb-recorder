@@ -74,7 +74,7 @@ async function main() {
     // Use meeting ID as export name if it isn't defined or if its value is "MEETING_ID"
     if (!exportname || exportname == "MEETING_ID") {
       exportname = url.split("/").pop() + ".webm";
-      console.log("exporting to ", exportname);
+      console.log("exporting as ", exportname);
     }
 
     var duration = process.argv[4];
@@ -134,7 +134,9 @@ async function main() {
     if (duration == 0 || duration > recDuration) {
       duration = recDuration;
     }
+    console.log("record duration in second: ", duration);
 
+    console.log("Hiding controls");
     await page.waitForSelector("button[title='Play']");
     await page.$eval(
       'button[aria-label="Fullscreen content"]',
@@ -167,6 +169,7 @@ async function main() {
       window.postMessage({ type: "REC_START" }, "*");
     });
 
+    console.log("Start recording");
     // Perform any actions that have to be captured in the exported video
     await page.waitFor(duration * 1000);
 
@@ -175,9 +178,11 @@ async function main() {
       window.postMessage({ type: "REC_STOP" }, "*");
     }, exportname);
 
+    console.log("Start downloading");
     // Wait for download of webm to complete
     await page.waitForSelector("html.downloadComplete", { timeout: 0 });
 
+    console.log("Start converting: ", convert);
     if (convert) {
       convertAndCopy(exportname);
     } else {
@@ -203,6 +208,8 @@ function convertAndCopy(filename) {
   var mp4File = onlyfileName[0] + ".mp4";
   var copyFrom = copyFromPath + "/" + filename + "";
   var copyTo = copyToPath + "/" + mp4File;
+
+  console.log("Start convert and copy from: " + copyFrom + " to : " + copyTo);
 
   if (!fs.existsSync(copyToPath)) {
     fs.mkdirSync(copyToPath);
@@ -251,6 +258,8 @@ function convertAndCopy(filename) {
 function copyOnly(filename) {
   var copyFrom = homedir + "/Downloads/" + filename;
   var copyTo = copyToPath + "/" + filename;
+
+  console.log("Start copying: from " + copyFrom + " to : " + copyTo);
 
   if (!fs.existsSync(copyToPath)) {
     fs.mkdirSync(copyToPath, { recursive: true });
