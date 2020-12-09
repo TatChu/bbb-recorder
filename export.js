@@ -128,7 +128,7 @@ async function main() {
 
     // Get recording duration
     var recDuration = await page.evaluate(() => {
-      return document.getElementById("video").duration;
+      return document.getElementById("vjs_video_3_html5_api").duration;
     });
     // If duration was set to 0 or is greater than recDuration, use recDuration value
     if (duration == 0 || duration > recDuration) {
